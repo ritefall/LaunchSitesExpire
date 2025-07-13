@@ -1,0 +1,8 @@
+<Project>
+   <PropertyGroup>
+      <ModName>Launch Sites Expire</ModName>
+      <ModFileName>LaunchSitesExpire</ModFileName>
+      <ModVersion>0.1.0.0</ModVersion>
+	  <RIMWORLD_MOD_DIR>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods</RIMWORLD_MOD_DIR>
+   </PropertyGroup>
+</Project>

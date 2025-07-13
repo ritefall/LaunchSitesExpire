@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ModMetaData>
+  <packageId>cass.LaunchSitesExpire</packageId>
+  <modVersion>0.1.0.0</modVersion>
+  <name>Launch Sites Expire</name>
+  <author>cass</author>
+  <description>Allows gravship launch sites to expire in the same way that abandoned camps do.</description>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+</ModMetaData>
