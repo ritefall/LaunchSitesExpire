@@ -2,17 +2,34 @@
 using Verse;
 using HarmonyLib;
 using RimWorld.Planet;
+using UnityEngine;
 
 namespace LaunchSitesExpire
 {
     [StaticConstructorOnStartup]
-    public static class LaunchSitesMod
+    public static class LaunchSitesExpireStartup
     {
-        static Harmony harmony;
-        static LaunchSitesMod()
+        static LaunchSitesExpireStartup()
         {
-            harmony = new Harmony("cass.launchsitesexpire");
-            harmony.PatchAll();
+            LaunchSitesExpireMod.harmony = new Harmony("cass.launchsitesexpire");
+            LaunchSitesExpireMod.harmony.PatchAll();
+        }
+    }
+
+    public class LaunchSitesExpireMod : Mod
+    {
+        public static Harmony harmony;
+        public static LaunchSitesExpireSettings settings;
+
+        public LaunchSitesExpireMod(ModContentPack content) : base(content)
+        {
+            settings = GetSettings<LaunchSitesExpireSettings>();
+        }
+        public override string SettingsCategory() => "Launch Sites Expire";
+        public override void DoSettingsWindowContents(Rect inRect)
+        {
+            settings.DoWindowContents(inRect);
+            base.DoSettingsWindowContents(inRect);
         }
     }
 
@@ -30,7 +47,7 @@ namespace LaunchSitesExpire
         {
             if (__state.wasGravshipLaunch && __instance.Tile.LayerDef == PlanetLayerDefOf.Surface)
             {
-                if (__state.wasLandmark)
+                if (__state.wasLandmark && !LaunchSitesExpireMod.settings.landmarkSitesCanExpire)
                 {
                     WorldObject worldObject = WorldObjectMaker.MakeWorldObject(ModDefOf.GravshipLaunchLandmark);
                     worldObject.Tile = __instance.Tile;
@@ -42,7 +59,7 @@ namespace LaunchSitesExpire
                     WorldObject worldObject = WorldObjectMaker.MakeWorldObject(WorldObjectDefOf.GravshipLaunch);
                     worldObject.Tile = __instance.Tile;
                     worldObject.SetFaction(__instance.Faction);
-                    worldObject.GetComponent<TimeoutComp>().StartTimeout(1800000);
+                    worldObject.GetComponent<TimeoutComp>().StartTimeout(60000 * LaunchSitesExpireMod.settings.launchSiteTimeoutDays);
                     Find.WorldObjects.Add(worldObject);
                 }
             }
