@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<LanguageData>
-    <LSE_LaunchSiteTimeoutDaysLabel>Launch sites expire after {0} day(s)</LSE_LaunchSiteTimeoutDaysLabel>
-    <LSE_LaunchSiteTimeoutDaysTooltip>How long should new launch sites remain on the map? 30 days by default to match abandoned camps.</LSE_LaunchSiteTimeoutDaysTooltip>
-    <LSE_LandmarkSitesCanExpireLabel>Launch sites on landmarks can expire?</LSE_LandmarkSitesCanExpireLabel>
-    <LSE_LandmarkSitesCanExpireTooltip>Can launch sites expire even when located on a landmark? Disabled by default to match abandoned camps.</LSE_LandmarkSitesCanExpireTooltip>
-</LanguageData>
