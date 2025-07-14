@@ -42,7 +42,7 @@
 			<CopyPatches Include="..\Patches\**" />
 			<CopyTextures Include="..\Textures\**" />
 			<CopyLoadFolders Include="..\LoadFolders.xml" />
-			<!--<CopyLicense Include="..\LICENSE" />-->
+			<CopyLicense Include="..\LICENSE" />
 			<!--<CopyReadme Include="..\README.md" />-->
 		</ItemGroup>
 		<Copy SourceFiles="@(Copy_16)" DestinationFolder="$(RIMWORLD_MOD_DIR)\$(ModFileName)\1.6\%(RecursiveDir)" />
@@ -51,7 +51,7 @@
 		<Copy SourceFiles="@(CopyPatches)" DestinationFolder="$(RIMWORLD_MOD_DIR)\$(ModFileName)\Patches\%(RecursiveDir)" />
 		<Copy SourceFiles="@(CopyTextures)" DestinationFolder="$(RIMWORLD_MOD_DIR)\$(ModFileName)\Textures\%(RecursiveDir)" />
 		<Copy SourceFiles="@(CopyLoadFolders)" DestinationFolder="$(RIMWORLD_MOD_DIR)\$(ModFileName)" />
-		<!--<Copy SourceFiles="@(CopyLicense)" DestinationFolder="$(RIMWORLD_MOD_DIR)\$(ModFileName)" />-->
+		<Copy SourceFiles="@(CopyLicense)" DestinationFolder="$(RIMWORLD_MOD_DIR)\$(ModFileName)" />
 		<!--<Copy SourceFiles="@(CopyReadme)" DestinationFolder="$(RIMWORLD_MOD_DIR)\$(ModFileName)" />-->
 	</Target>
 
