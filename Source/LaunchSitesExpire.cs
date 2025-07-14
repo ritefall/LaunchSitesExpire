@@ -1,8 +1,11 @@
-﻿using RimWorld;
-using Verse;
-using HarmonyLib;
+﻿using HarmonyLib;
+using RimWorld;
 using RimWorld.Planet;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using UnityEngine;
+using Verse;
 
 namespace LaunchSitesExpire
 {
@@ -39,8 +42,6 @@ namespace LaunchSitesExpire
         static void Prefix(out (bool wasGravshipLaunch, bool wasLandmark) __state, MapParent __instance, ref bool wasGravshipLaunch)
         {
             __state = (wasGravshipLaunch, wasLandmark: __instance.Map.TileInfo.Landmark != null);
-
-            wasGravshipLaunch = false;
         }
 
         static void Postfix((bool wasGravshipLaunch, bool wasLandmark) __state, MapParent __instance)
@@ -63,6 +64,18 @@ namespace LaunchSitesExpire
                     Find.WorldObjects.Add(worldObject);
                 }
             }
+        }
+
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var codeMatcher = new CodeMatcher(instructions);
+
+            codeMatcher.MatchStartForward(CodeMatch.IsLdarg(1))
+                .ThrowIfInvalid("Could not find load argument 1 (wasGravshipLaunch)")
+                .RemoveInstruction()
+                .InsertAndAdvance(new CodeInstruction(OpCodes.Ldc_I4_0));
+
+            return codeMatcher.Instructions();
         }
     }
 }
