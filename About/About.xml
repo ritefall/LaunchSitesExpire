@@ -1,10 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ModMetaData>
   <packageId>cass.LaunchSitesExpire</packageId>
-  <modVersion>0.1.0.0</modVersion>
+  <modVersion>0.1.0</modVersion>
   <name>Launch Sites Expire</name>
   <author>cass</author>
-  <description>Allows gravship launch sites to expire in the same way that abandoned camps do.</description>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
@@ -23,4 +22,21 @@
     <li>ludeon.rimworld.odyssey</li>
     <li>brrainz.harmony</li>
   </loadAfter>
+  <url>https://github.com/ritefall/LaunchSitesExpire</url>
+  <description>
+A small mod that allows gravship launch sites to expire after a time, preventing them from cluttering the map forever.
+
+By default functions in the same way as abandoned camps, only removing sites that aren't located on a landmark. This can be configured, as well as the number of days launch sites persist for.
+*Settings do not apply retroactively to old launch sites!
+
+Performance
+- Patches a single function that only runs when a settlement is abandoned. Should have no meaningful impact.
+
+Adding to saves
+- Safe
+- Pre-existing launch sites will not despawn
+
+Removing from saves
+- Probably safe?
+- Landmark launch sites will disappear with a one-time red error. Remove them in dev mode first if you want to be safe.</description>
 </ModMetaData>
