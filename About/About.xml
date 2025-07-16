@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ModMetaData>
   <packageId>cass.LaunchSitesExpire</packageId>
-  <modVersion>1.0.0</modVersion>
+  <modVersion>1.1.0</modVersion>
   <name>Launch Sites Expire</name>
   <author>cass</author>
   <supportedVersions>
