@@ -13,7 +13,6 @@ namespace LaunchSitesExpire
     {
         static LaunchSitesExpireStartup()
         {
-            Harmony.DEBUG = true;
             LaunchSitesExpireMod.harmony = new Harmony("cass.launchsitesexpire");
             LaunchSitesExpireMod.harmony.PatchAll();
         }
@@ -76,19 +75,34 @@ namespace LaunchSitesExpire
         {
             var codeMatcher = new CodeMatcher(instructions);
 
+            //Toggle for if abandoned landmarks can spawn
             var landmarkMethod = AccessTools.PropertyGetter(typeof(Tile), nameof(Tile.Landmark));
-
             codeMatcher.MatchStartForward(CodeMatch.Calls(landmarkMethod), CodeMatch.Branches("landmark-branch"))
-            .ThrowIfInvalid("Couldn't find place to insert camp landmark toggle.")
+            .ThrowIfInvalid("Couldn't match place to insert camp landmark toggle.")
             .InsertAfterAndAdvance(CodeInstruction.Call(() => CanCreateAbandonedLandmarks()))
             .InsertAndAdvance(codeMatcher.NamedMatch("landmark-branch"));
+
+
+            //Override the duration of the timeout
+            var durationMatch = CodeMatch.LoadsConstant(1800000);
+            var timeoutMethod = AccessTools.Method(typeof(TimeoutComp), nameof(TimeoutComp.StartTimeout));
+            codeMatcher.Start()
+            .MatchStartForward(durationMatch, CodeMatch.Calls(timeoutMethod))
+            .ThrowIfInvalid("Couldn't match timeout duration")
+            .RemoveInstruction()
+            .Insert(CodeInstruction.Call(() => AbandonedCampTimeoutDuration()));
 
             return codeMatcher.Instructions();
         }
 
         static bool CanCreateAbandonedLandmarks()
         {
-            return LaunchSitesExpireMod.settings.landmarkCampsCanExpire;
+            return !LaunchSitesExpireMod.settings.landmarkCampsCanExpire;
+        }
+
+        static int AbandonedCampTimeoutDuration()
+        {
+            return 60000 * LaunchSitesExpireMod.settings.abandonedCampTimeoutDays;
         }
     }
 }
