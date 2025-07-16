@@ -1,8 +1,10 @@
-﻿using RimWorld;
-using Verse;
-using HarmonyLib;
+﻿using HarmonyLib;
+using RimWorld;
 using RimWorld.Planet;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using UnityEngine;
+using Verse;
 
 namespace LaunchSitesExpire
 {
@@ -11,6 +13,7 @@ namespace LaunchSitesExpire
     {
         static LaunchSitesExpireStartup()
         {
+            Harmony.DEBUG = true;
             LaunchSitesExpireMod.harmony = new Harmony("cass.launchsitesexpire");
             LaunchSitesExpireMod.harmony.PatchAll();
         }
@@ -63,6 +66,29 @@ namespace LaunchSitesExpire
                     Find.WorldObjects.Add(worldObject);
                 }
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(Camp), nameof(Camp.Notify_MyMapRemoved))]
+    class Camp_Notify_MyMapRemoved_Patch
+    {
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var codeMatcher = new CodeMatcher(instructions);
+
+            var landmarkMethod = AccessTools.PropertyGetter(typeof(Tile), nameof(Tile.Landmark));
+
+            codeMatcher.MatchStartForward(CodeMatch.Calls(landmarkMethod), CodeMatch.Branches("landmark-branch"))
+            .ThrowIfInvalid("Couldn't find place to insert camp landmark toggle.")
+            .InsertAfterAndAdvance(CodeInstruction.Call(() => CanCreateAbandonedLandmarks()))
+            .InsertAndAdvance(codeMatcher.NamedMatch("landmark-branch"));
+
+            return codeMatcher.Instructions();
+        }
+
+        static bool CanCreateAbandonedLandmarks()
+        {
+            return LaunchSitesExpireMod.settings.landmarkCampsCanExpire;
         }
     }
 }

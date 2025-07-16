@@ -15,6 +15,9 @@ namespace LaunchSitesExpire
             public static readonly string LSE_LaunchSiteTimeoutDaysTooltip = "LSE_LaunchSiteTimeoutDaysTooltip".Translate();
             public static readonly string LSE_LandmarkSitesCanExpireLabel = "LSE_LandmarkSitesCanExpireLabel".Translate();
             public static readonly string LSE_LandmarkSitesCanExpireTooltip = "LSE_LandmarkSitesCanExpireTooltip".Translate();
+
+            public static readonly string LSE_LandmarkCampsCanExpireLabel = "LSE_LandmarkCampsCanExpireLabel".Translate();
+            public static readonly string LSE_LandmarkCampsCanExpireTooltip = "LSE_LandmarkCampsCanExpireTooltip".Translate();
         }
     }
 }
