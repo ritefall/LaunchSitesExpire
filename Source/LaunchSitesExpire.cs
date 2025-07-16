@@ -1,8 +1,10 @@
-﻿using RimWorld;
-using Verse;
-using HarmonyLib;
+﻿using HarmonyLib;
+using RimWorld;
 using RimWorld.Planet;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using UnityEngine;
+using Verse;
 
 namespace LaunchSitesExpire
 {
@@ -63,6 +65,44 @@ namespace LaunchSitesExpire
                     Find.WorldObjects.Add(worldObject);
                 }
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(Camp), nameof(Camp.Notify_MyMapRemoved))]
+    class Camp_Notify_MyMapRemoved_Patch
+    {
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var codeMatcher = new CodeMatcher(instructions);
+
+            //Toggle for if abandoned landmarks can spawn
+            var landmarkMethod = AccessTools.PropertyGetter(typeof(Tile), nameof(Tile.Landmark));
+            codeMatcher.MatchStartForward(CodeMatch.Calls(landmarkMethod), CodeMatch.Branches("landmark-branch"))
+            .ThrowIfInvalid("Couldn't match place to insert camp landmark toggle.")
+            .InsertAfterAndAdvance(CodeInstruction.Call(() => CanCreateAbandonedLandmarks()))
+            .InsertAndAdvance(codeMatcher.NamedMatch("landmark-branch"));
+
+
+            //Override the duration of the timeout
+            var durationMatch = CodeMatch.LoadsConstant(1800000);
+            var timeoutMethod = AccessTools.Method(typeof(TimeoutComp), nameof(TimeoutComp.StartTimeout));
+            codeMatcher.Start()
+            .MatchStartForward(durationMatch, CodeMatch.Calls(timeoutMethod))
+            .ThrowIfInvalid("Couldn't match timeout duration")
+            .RemoveInstruction()
+            .Insert(CodeInstruction.Call(() => AbandonedCampTimeoutDuration()));
+
+            return codeMatcher.Instructions();
+        }
+
+        static bool CanCreateAbandonedLandmarks()
+        {
+            return !LaunchSitesExpireMod.settings.landmarkCampsCanExpire;
+        }
+
+        static int AbandonedCampTimeoutDuration()
+        {
+            return 60000 * LaunchSitesExpireMod.settings.abandonedCampTimeoutDays;
         }
     }
 }
